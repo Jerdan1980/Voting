@@ -11,6 +11,7 @@ using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Data;
+using System.Net.Http;
 
 namespace VotingWeb
 {
@@ -41,6 +42,11 @@ namespace VotingWeb
                         builder.Services.AddSingleton<StatelessServiceContext>(serviceContext);
                         builder.WebHost
                                     .UseKestrel()
+									.ConfigureServices(services => services
+										.AddSingleton<HttpClient>(new HttpClient())
+										.AddSingleton<FabricClient>(new FabricClient())
+										.AddSingleton<StatelessServiceContext>(serviceContext)
+									)
                                     .UseContentRoot(Directory.GetCurrentDirectory())
                                     .UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.None)
                                     .UseUrls(url);
@@ -71,5 +77,10 @@ namespace VotingWeb
                     }))
             };
         }
+
+		internal static Uri GetVotingDataServiceName(ServiceContext context)
+		{
+			return new Uri($"{context.CodePackageActivationContext.ApplicationName}/Votingdata");
+		}
     }
 }
