@@ -23,13 +23,11 @@ namespace VotingWeb.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Get()
 		{
-			List<KeyValuePair<string, int>> votes = new List<KeyValuePair<string, int>>
-			{
-				new KeyValuePair<string, int>("Pizza", 3),
-				new KeyValuePair<string, int>("Ice Cream", 4)
-			};
+			List<KeyValuePair<string, int>> votes = new List<KeyValuePair<string, int>>();
+			votes.Add(new KeyValuePair<string, int>("Pizza", 3));
+			votes.Add(new KeyValuePair<string, int>("Ice Cream", 4));
 
-			return Json(votes);
+			return await Task.FromResult(Json(votes));
 		}
 	}
 }
